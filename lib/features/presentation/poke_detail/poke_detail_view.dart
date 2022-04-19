@@ -2,6 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sprout_pokedex/features/data/model/poke_detail_response.dart';
 import 'package:sprout_pokedex/features/presentation/poke_detail/poke_detail_about_view.dart';
+import 'package:sprout_pokedex/features/presentation/poke_detail/poke_detail_base_stats_view.dart';
+import 'package:sprout_pokedex/features/presentation/poke_detail/poke_detail_evolution_view.dart';
+import 'package:sprout_pokedex/features/presentation/poke_detail/poke_detail_moves_view.dart';
 import 'package:sprout_pokedex/features/presentation/poke_list/poke_list_view.dart';
 
 class PokeDetailView extends StatefulWidget {
@@ -15,14 +18,6 @@ class PokeDetailView extends StatefulWidget {
 
 class _PokeDetailViewState extends State<PokeDetailView>
     with TickerProviderStateMixin {
-
-  var pagesList=[
-    PokeDetailAboutView(),
-    PokeDetailAboutView(),
-    PokeDetailAboutView(),
-    PokeDetailAboutView(),
-  ];
-
   late TabController tabController;
 
   @override
@@ -34,9 +29,25 @@ class _PokeDetailViewState extends State<PokeDetailView>
 
   @override
   Widget build(BuildContext context) {
+    var pagesList = [
+      PokeDetailAboutView(
+        pokeDetail: widget.pokeDetail,
+      ),
+      PokeDetailBaseStatsView(
+        pokeDetail: widget.pokeDetail,
+      ),
+      PokeDetailEvolutionView(
+        pokeDetail: widget.pokeDetail,
+      ),
+      PokeDetailMovesView(
+        pokeDetail: widget.pokeDetail,
+      )
+    ];
+
     return SafeArea(
         child: Scaffold(
       body: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Container(
             padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -116,70 +127,73 @@ class _PokeDetailViewState extends State<PokeDetailView>
               ],
             ),
           ),
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))),
-              child: Column(
-                children: [
-                  Stack(
-                    fit: StackFit.passthrough,
-                    alignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 15),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                color: Colors.grey.withOpacity(0.2),
-                                width: 2.0),
-                          ),
+          Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Stack(
+                  fit: StackFit.passthrough,
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              color: Colors.grey.withOpacity(0.2),
+                              width: 2.0),
                         ),
                       ),
-                      TabBar(
-                        labelStyle: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w700),
-                        controller: tabController,
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        indicatorColor: Colors.blueGrey,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.grey,
-                        onTap: (index) {
-                          setState(() {
-                            tabController.index = index;
-                          });
-                        },
-                        tabs: const [
-                          Tab(
-                            text: 'About',
-                          ),
-                          Tab(
-                            text: 'Base Stats',
-                          ),
-                          Tab(
-                            text: 'Evolution',
-                          ),
-                          Tab(
-                            text: 'Moves',
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      physics: const BouncingScrollPhysics(),
-                      dragStartBehavior: DragStartBehavior.down,
-                      children: pagesList,
-                      controller: tabController,
                     ),
-                  )
-                ],
-              ),
+                    TabBar(
+                      labelStyle: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w700),
+                      controller: tabController,
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      indicatorColor: Colors.blueGrey,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey,
+                      onTap: (index) {
+                        setState(() {
+                          tabController.index = index;
+                        });
+                      },
+                      tabs: const [
+                        Tab(
+                          text: 'About',
+                        ),
+                        Tab(
+                          text: 'Base Stats',
+                        ),
+                        Tab(
+                          text: 'Evolution',
+                        ),
+                        Tab(
+                          text: 'Moves',
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 400,
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
+                    child: TabBarView(
+                  physics: const BouncingScrollPhysics(),
+                  dragStartBehavior: DragStartBehavior.down,
+                  children: pagesList,
+                  controller: tabController,
+                    ),
+                  ),
+                )
+              ],
             ),
           )
         ],

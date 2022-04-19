@@ -63,9 +63,7 @@ Future<PokeEvolutionChainResponse> getEvolution(String url) async {
     Response<String>? response = await BaseService.getDio()?.get(url);
     String? body = response?.data.toString();
 
-    var responseMap = jsonDecode(body ?? '');
-
-    return pokeEvolutionChainResponseFromJson(responseMap);
+    return pokeEvolutionChainResponseFromJson(body!);
   } on DioError catch (e) {
     debugPrint(e.toString());
   }
